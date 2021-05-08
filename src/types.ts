@@ -11,3 +11,11 @@ export interface SliderProps {
   currentValue: number;
   duration: number | undefined;
 }
+
+export interface MockFeed {
+  id: number,
+  author: string,
+  image: string,
+  lastUpdate: string,
+  title: string
+} 

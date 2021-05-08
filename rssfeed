@@ -1,2 +1,35 @@
 https://samharris.org/subscriber-rss/?uid=PNIuCOPJFqnyhhg
 https://www.omnycontent.com/d/playlist/aaea4e69-af51-495e-afc9-a9760146922b/0a686f81-0eeb-455b-98be-ab0d00055d5e/1fab2b0b-a7f0-4d71-bf6d-ab0d00055d6c/podcast.rss
+Making Sense with Sam Harris - Subscriber Content Fri, 30 Apr 2021 20:21:56 +0000
+Object {
+  "authors": Array [
+    Object {
+      "name": "Sam Harris",
+    },
+  ],
+  "block": "yes",
+  "categories": Array [
+    Object {
+      "name": "Science & Medicine",
+      "subCategories": Array [],
+    },
+    Object {
+      "name": "Society & Culture",
+      "subCategories": Array [],
+    },
+    Object {
+      "name": "Religion & Spirituality",
+      "subCategories": Array [],
+    },
+  ],
+  "complete": undefined,
+  "explicit": "no",
+  "image": "https://static.samharris.org/images/making-sense-logo-2400x2400.png",
+  "newFeedUrl": undefined,
+  "owner": Object {
+    "email": "contact@samharris.org",
+    "name": "Making Sense with Sam Harris",
+  },
+  "subtitle": "",
+  "summary": "Join neuroscientist, philosopher, and best-selling author Sam Harris as he explores important and controversial questions about the human mind, society, and current events. Sam Harris is the author of five New York Times bestsellers. His books include The End of Faith, Letter to a Christian Nation, The Moral Landscape, Free Will, Lying, Waking Up, and Islam and the Future of Tolerance (with Maajid Nawaz). The End of Faith won the 2005 PEN Award for Nonfiction. His writing and public lectures cover a wide range of topics—neuroscience, moral philosophy, religion, meditation practice, human violence, rationality—but generally focus on how a growing understanding of ourselves and the world is changing our sense of how we should live. Harris's work has been published in more than 20 languages and has been discussed in The New York Times, Time, Scientific American, Nature, Newsweek, Rolling Stone, and many other journals. He has written for The New York Times, The Los Angeles Times, The Economist, The Times (London), The Boston Globe, The Atlantic, The Annals of Neurology, and elsewhere. Sam Harris received a degree in philosophy from Stanford University and a Ph.D. in neuroscience from UCLA.",
+}

@@ -1,24 +1,39 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Link } from "react-router-native";
+import { Surface, IconButton } from 'react-native-paper';
+import theme from "../theme";
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
+    width: "95%",
+    alignItems: "stretch",
+    elevation: 10,
+    backgroundColor: theme.colors.primaryLighter,
   }
 });
 
+const Tab = ({icon, linkTo} : {icon: string, linkTo: string}) => {
+  return (
+    
+    <Link
+      to={linkTo}
+      component={IconButton}
+      icon={icon} size={30}
+      onPress={() => console.log("pressed")}
+      color={theme.colors.secondary}
+    />
+  );
+};
+
 const NavBar = () => {
   return (
-    <View style={styles.container}>
-      <Link to="/">
-        <Text>Home</Text>
-      </Link>
-      <Link to="/explore">
-        <Text>Explore</Text>
-      </Link>
-    </View>
+    <Surface style={styles.container}>
+      <Tab icon="home" linkTo="/"></Tab>
+      <Tab icon="search-web" linkTo="/explore"></Tab>
+    </Surface>
   );
 };
 
