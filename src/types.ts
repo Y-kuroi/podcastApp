@@ -1,4 +1,7 @@
 
+
+type Maybe<T> = T | undefined;
+
 export interface Player {
   controller: {
     play(): Promise<void>;
@@ -12,10 +15,15 @@ export interface SliderProps {
   duration: number | undefined;
 }
 
-export interface MockFeed {
-  id: number,
-  author: string,
-  image: string,
-  lastUpdate: string,
-  title: string
-} 
+export interface PlayerUI {
+  uri: Maybe<string>;
+  title: string;
+  subtitle: string;
+  sliderProps: SliderProps;
+  isPlaying: boolean;
+  play(): Promise<void>;
+  pause(): Promise<void>;
+  seek(value: number): Promise<void>;
+}
+
+export type MiniPlayerUI = Omit<PlayerUI, "seek" | "subtitle" | "title">;

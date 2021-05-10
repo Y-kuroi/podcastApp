@@ -1,59 +1,79 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Route, Switch } from "react-router-native";
-import PodcastPlayer from "./PodcastPlayer";
-import NavBar from "./NavBar";
-import AppBar from "./AppBar";
+import React, { useEffect } from 'react';
+import { useStateValue, setRssFeeds } from "../state";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createStackNavigator } from "@react-navigation/stack";
 import * as rssParser from 'react-native-rss-parser';
-import Constants from 'expo-constants';
-import { Text } from 'react-native-paper';
-import theme from "../theme";
+import { View, StyleSheet } from "react-native";
+import TabBar from "./TabBar";
 import PodcastsList from './PodcastsList';
+import Recent from "./Recent";
+import Favorites from "./Favorites";
+import Discover from "./Discover";
+import PodcastPlayer from './PodcastPlayer';
+import theme from '../theme';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+
+const Tab = createMaterialTopTabNavigator();
+const Stack = createStackNavigator();
+
+const rssLinks = [
+  "https://feeds.npr.org/510312/podcast.xml",
+  "https://samharris.org/subscriber-rss/?uid=PNIuCOPJFqnyhhg",
+  "https://www.omnycontent.com/d/playlist/aaea4e69-af51-495e-afc9-a9760146922b/0a686f81-0eeb-455b-98be-ab0d00055d5e/1fab2b0b-a7f0-4d71-bf6d-ab0d00055d6c/podcast.rss",
+  "https://www.interlochenpublicradio.org/podcast/points-north/rss.xml",
+  "https://waer.drupal.publicbroadcasting.net/podcasts/117076/rss.xml",
+  "https://kunm.drupal.publicbroadcasting.net/podcasts/117553/rss.xml",
+  "https://feeds.podcastmirror.com/a-i-nation",
+  "https://cnem.chem.ufl.edu/tinytechpodcast.xml"
+];
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.primary,
-    alignItems: "center",
-    justifyContent:"space-between",
-    paddingTop: Constants.statusBarHeight,
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 1,
+    // backgroundColor: theme.colors.primaryLighter,
   },
-  bottomContainer: {
-    // flex: 1
-  }
 });
 
-const Main = () => {
-  const [ rssFeed, setRssFeed ] = useState<rssParser.Feed>();
-
-  useEffect(() => {
-    const getRssFeed = async () => {
-      const response = await fetch("https://samharris.org/subscriber-rss/?uid=PNIuCOPJFqnyhhg");
-      const responseData = await response.text();
-      const rssFeed = await rssParser.parse(responseData);
-      setRssFeed(rssFeed);
-      // console.log(rssFeed.title,
-      //   rssFeed.lastUpdated, rssFeed.itunes);
-    };
-    void getRssFeed();
-  }, []);
-
+const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <AppBar />
-      <Switch>
-        <Route path="/explore">
-          <View>
-            <Text>Explore</Text>
-          </View>
-        </Route>
-        <Route path="/" exact>
-          {rssFeed && <PodcastsList rssFeed={rssFeed}/>}
-        </Route>
-      </Switch>
-      {rssFeed && <PodcastPlayer episodeMetaData={rssFeed.items[0]} />}
+      <View style={{flex: 1}}>
+        <Tab.Navigator tabBar={props => <TabBar {...props} />}>
+          <Tab.Screen name="Podcasts" component={PodcastsList} />
+          <Tab.Screen name="Recent" component={Recent} />
+          <Tab.Screen name="Favorites" component={Favorites} />
+          <Tab.Screen name="Discover" component={Discover} />
+        </Tab.Navigator>
+      </View>
+      <TouchableHighlight onPress={() => navigation.navigate("player", { mini: false })}>
+          <PodcastPlayer />
+      </TouchableHighlight>
     </View>
+  );
+};
+
+const Main = () => {
+  const [ _, dispatch ] = useStateValue();
+  useEffect(() => {
+    const getRssFeed = async (link : string) => {
+        const response = await fetch(link);
+        const responseData = await response.text();
+        return rssParser.parse(responseData);
+    };
+    const setFeedsArray = async (promises : Array<Promise<rssParser.Feed>>) => {
+      const feeds = await Promise.all(promises);
+      dispatch(setRssFeeds(feeds));
+    };
+    const promises = rssLinks.map(link => getRssFeed(link));
+    void setFeedsArray(promises);
+  }, []);
+  return (
+    <>
+    <Stack.Navigator>
+      <Stack.Screen options={{ headerShown: false }} name="Home" component={Home} />
+      <Stack.Screen options={{ headerTransparent : true, cardStyle: { backgroundColor: theme.colors.primary} }} name="player" component={PodcastPlayer} />
+    </Stack.Navigator>
+    </>
   );
 };
 

@@ -1,8 +1,7 @@
 import React from "react";
-import { Subheading, Surface, Text, Title, Caption } from "react-native-paper";
+import { Subheading, Surface, Title, Caption } from "react-native-paper";
 import { Feed } from "react-native-rss-parser";
 import { Image, StyleSheet, View } from "react-native";
-import { MockFeed } from "../types";
 import theme from "../theme";
 
 const styles = StyleSheet.create({
@@ -23,25 +22,29 @@ const styles = StyleSheet.create({
   infoContainer: {
     flex: 1,
     paddingLeft: 5,
+    justifyContent: "space-evenly"
+  },
+  title: {
+    fontSize: 16,
   },
   caption: {
     fontStyle: "italic",
   }
 });
 
-const SingleItem = ({ item } : {item : MockFeed }) => {
+const SingleItem = ({ item } : {item : Feed }) => {
   return(
     <Surface style={styles.container}>
       <Image
         style={styles.cover}
         source={{
-          uri: item.image
+          uri: item.itunes.image
         }}
       />
       <View style={styles.infoContainer}>
-        <Title>{item.title}</Title>
-        <Subheading>{item.author}</Subheading>
-        <Caption style={styles.caption}>Last update: {item.lastUpdate}</Caption>
+        <Title numberOfLines={1} style={styles.title}>{item.title}</Title>
+        <Subheading numberOfLines={1}>{item.itunes.authors[0].name}</Subheading>
+        <Caption numberOfLines={1} style={styles.caption}>Last update: {item.lastUpdated}</Caption>
       </View>
     </Surface>
   );
