@@ -28,6 +28,7 @@ const PodcastsList = () => {
         data={feeds}
         keyExtractor={({ title }) => title}
         ItemSeparatorComponent={Separator}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

@@ -13,8 +13,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
     justifyContent: "space-between",
-    // marginHorizontal: 5,
-    backgroundColor: theme.colors.primaryLighter,
+    backgroundColor: theme.colors.primary,
     height: 100,
     flex: 0
   },

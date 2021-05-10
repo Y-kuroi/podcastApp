@@ -1,8 +1,7 @@
 import React from "react";
 import { IconButton, Title } from 'react-native-paper';
-import { TouchableOpacity, ScrollView, StyleSheet, View } from "react-native";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
 import theme from "../theme";
-import Tab from "./Tab";
 import Constants from 'expo-constants';
 import Animated from 'react-native-reanimated';
 
@@ -17,18 +16,21 @@ const styles = StyleSheet.create({
     flex: 0
   },
   searchBar: {
-    // height: "80%",
     flex: 1,
   },
   tabBar: {
     backgroundColor: theme.colors.primary,
+    paddingHorizontal: 2,
     alignSelf: "stretch",
   },
   title: {
     fontWeight: "bold",
-    padding: 8,
+    padding: 3,
     margin: 2,
-    fontSize: 26
+    fontSize: 20,
+  },
+  sections: {
+    flexDirection: "row"
   }
 });
 
@@ -40,13 +42,11 @@ const TabBar = ({state, descriptors, navigation, position }) => {
         <IconButton icon="magnify" color={theme.colors.secondary} onPress={() => console.log("search")}/>
         <IconButton icon="dots-vertical" color={theme.colors.secondary} onPress={() => console.log("menu")}/>
       </View>
-      <ScrollView horizontal>
+      <View style={styles.sections}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const label = route.name;
-
           const isFocused = state.index === index;
-
           const onPress = () => {
             const event = navigation.emit({
               type: 'tabPress',
@@ -58,18 +58,20 @@ const TabBar = ({state, descriptors, navigation, position }) => {
               navigation.navigate(route.name);
             }
           };
-
           const onLongPress = () => {
             navigation.emit({
               type: 'tabLongPress',
               target: route.key,
             });
           };
-
           const inputRange = state.routes.map((_, i) => i);
           const opacity = Animated.interpolate(position, {
             inputRange,
             outputRange: inputRange.map(i => (i === index ? 1 : 0.5)),
+          });
+          const scale = Animated.interpolate(position, {
+            inputRange,
+            outputRange: inputRange.map(i => (i === index ? 1.1 : 1)),
           });
           return (
             <TouchableOpacity
@@ -81,13 +83,13 @@ const TabBar = ({state, descriptors, navigation, position }) => {
               onPress={onPress}
               onLongPress={onLongPress}
             >
-              <Animated.Text style={{ opacity, ...styles.title }}>
-                {label}
-              </Animated.Text>
+              <Animated.View style={{ opacity, ...styles.title, transform: [{ scale }] }}>
+                <Title>{label}</Title>
+              </Animated.View>
             </TouchableOpacity>
           );
       })}
-      </ScrollView>
+      </View>
     </View>
   );
 };
