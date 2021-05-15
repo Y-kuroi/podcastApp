@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react';
 import { useStateValue, setRssFeeds } from "../state";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from "@react-navigation/stack";
+import { StackParamList } from "../types";
 import * as rssParser from 'react-native-rss-parser';
-import { View, StyleSheet } from "react-native";
-import TabBar from "./TabBar";
-import PodcastsList from './PodcastsList';
-import Recent from "./Recent";
-import Favorites from "./Favorites";
-import Discover from "./Discover";
 import PodcastPlayer from './PodcastPlayer';
+import Home from "./Home";
+import EpisodeList from "./EpisodeList";
 import theme from '../theme';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 
-const Tab = createMaterialTopTabNavigator();
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<StackParamList>();
 
 const rssLinks = [
   "https://feeds.npr.org/510312/podcast.xml",
@@ -27,33 +21,8 @@ const rssLinks = [
   "https://cnem.chem.ufl.edu/tinytechpodcast.xml"
 ];
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // backgroundColor: theme.colors.primaryLighter,
-  },
-});
-
-const Home = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <View style={{flex: 1}}>
-        <Tab.Navigator tabBar={props => <TabBar {...props} />}>
-          <Tab.Screen name="Podcasts" component={PodcastsList} />
-          <Tab.Screen name="Recent" component={Recent} />
-          <Tab.Screen name="Favorites" component={Favorites} />
-          <Tab.Screen name="Discover" component={Discover} />
-        </Tab.Navigator>
-      </View>
-      <TouchableHighlight onPress={() => navigation.navigate("player", { mini: false })}>
-          <PodcastPlayer />
-      </TouchableHighlight>
-    </View>
-  );
-};
-
 const Main = () => {
-  const [ _, dispatch ] = useStateValue();
+  const [  , dispatch ] = useStateValue();
   useEffect(() => {
     const getRssFeed = async (link : string) => {
         const response = await fetch(link);
@@ -62,7 +31,8 @@ const Main = () => {
     };
     const setFeedsArray = async (promises : Array<Promise<rssParser.Feed>>) => {
       const feeds = await Promise.all(promises);
-      dispatch(setRssFeeds(feeds));
+      const map = Object.fromEntries(new Map(feeds.map(feed => [feed.title, feed])));
+      dispatch(setRssFeeds(map));
     };
     const promises = rssLinks.map(link => getRssFeed(link));
     void setFeedsArray(promises);
@@ -71,7 +41,8 @@ const Main = () => {
     <>
     <Stack.Navigator>
       <Stack.Screen options={{ headerShown: false }} name="Home" component={Home} />
-      <Stack.Screen options={{ headerTransparent : true, cardStyle: { backgroundColor: theme.colors.primary} }} name="player" component={PodcastPlayer} />
+      <Stack.Screen options={{ headerTitle: "Now Playing", headerTransparent : true, cardStyle: { backgroundColor: theme.colors.primary} }} name="player" component={PodcastPlayer} />
+      <Stack.Screen options={{ headerTitle: "Episodes list", headerTransparent: true ,cardStyle: { backgroundColor: theme.colors.primaryLighterComp } }} name="EpsList" component={EpisodeList} />
     </Stack.Navigator>
     </>
   );

@@ -4,6 +4,7 @@ import { TouchableOpacity, StyleSheet, View } from "react-native";
 import theme from "../theme";
 import Constants from 'expo-constants';
 import Animated from 'react-native-reanimated';
+import { MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
 
 const styles = StyleSheet.create({
   container: {
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
 });
 
 
-const TabBar = ({state, descriptors, navigation, position }) => {
+const TabBar = ({ state, descriptors, navigation, position } : MaterialTopTabBarProps) => {
   return (
     <View style={styles.tabBar}>
       <View style={styles.container}>

@@ -7,10 +7,9 @@ const controller = new Audio.Sound();
 
 const usePlayer = (track: FeedItem, setSliderProps: React.Dispatch<React.SetStateAction<SliderProps>>) => {
   const [ player, setPlayer ] = useState<Player>();
-
   useEffect(() => {
     setPlayer({ controller: { play: playTrack, pause: pauseTrack, seek }});
-  }, [controller]);
+  }, [track]);
 
   const onStatusUpdate = (status: AVPlaybackStatus) => {
     if (status.isLoaded && status.isPlaying)
@@ -21,9 +20,15 @@ const usePlayer = (track: FeedItem, setSliderProps: React.Dispatch<React.SetStat
     if (track && controller) {
       try {
         const status = await controller.getStatusAsync();
+        console.log(status.isLoaded);
         try {
-          if (!status.isLoaded)
+          if (!status.isLoaded) {
             await controller.loadAsync({ uri : track.enclosures[0].url });
+          } else {
+            console.log("unload reload");
+            await controller.unloadAsync();
+            await controller.loadAsync({ uri: track.enclosures[0].url });
+          }    
         }
         catch (error) {
           console.log("Cannot load track", error);
@@ -55,8 +60,10 @@ const usePlayer = (track: FeedItem, setSliderProps: React.Dispatch<React.SetStat
     if (controller) {
       try {
         const status = await controller.getStatusAsync();
-        if (status.isLoaded)
-          await controller.setPositionAsync(currentValue);
+        if (status.isLoaded && status.isPlaying) {
+          await controller.pauseAsync();
+        }
+        await controller.setPositionAsync(currentValue);
       } catch (e) {
         console.log(e);
       }

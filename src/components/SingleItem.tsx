@@ -1,8 +1,9 @@
 import React from "react";
 import { Subheading, Surface, Title, Caption } from "react-native-paper";
 import { Feed } from "react-native-rss-parser";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import theme from "../theme";
+import { setCurrentFeed, useStateValue } from "../state";
 
 const styles = StyleSheet.create({
   container: {
@@ -32,7 +33,12 @@ const styles = StyleSheet.create({
   }
 });
 
-const SingleItem = ({ item } : {item : Feed }) => {
+const SingleItem = ({ item, navigate} : {item : Feed, navigate(): void }) => {
+  const [ , dispatch ] = useStateValue();
+  const handlePress = () => {
+    dispatch(setCurrentFeed(item.title));
+    navigate();
+  };
   return(
     <Surface style={styles.container}>
       <Image
@@ -42,9 +48,11 @@ const SingleItem = ({ item } : {item : Feed }) => {
         }}
       />
       <View style={styles.infoContainer}>
-        <Title numberOfLines={1} style={styles.title}>{item.title}</Title>
-        <Subheading numberOfLines={1}>{item.itunes.authors[0].name}</Subheading>
-        <Caption numberOfLines={1} style={styles.caption}>Last update: {item.lastUpdated}</Caption>
+        <Pressable android_ripple={{color: "gray", radius: -30}} onPress={handlePress}>
+          <Title numberOfLines={1} style={styles.title}>{item.title}</Title>
+          <Subheading numberOfLines={1}>{item.itunes.authors[0].name}</Subheading>
+          <Caption numberOfLines={1} style={styles.caption}>Last update: {item.lastUpdated}</Caption>
+        </Pressable>
       </View>
     </Surface>
   );

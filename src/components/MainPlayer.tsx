@@ -8,7 +8,6 @@ import Constants from 'expo-constants';
 
 const styles = StyleSheet.create({
   container: {
-    // marginTop: 40,
     paddingTop: Constants.statusBarHeight + 60,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -58,8 +57,8 @@ const MainPlayer = ({ uri, title, subtitle, sliderProps, isPlaying, play, pause,
         <Surface style={styles.surface}>
           <Image style={styles.cover} source={{ uri }} />
         </Surface>
-        <Title>{title}</Title>
-        <Subheading>{subtitle}</Subheading>
+        <Title numberOfLines={1 }>{title}</Title>
+        <Subheading numberOfLines={3} >{subtitle}</Subheading>
       </View>
       <View style={styles.lowerPart}>
         <Slider
