@@ -4,6 +4,7 @@ import Slider from '@react-native-community/slider';
 import { MiniPlayerUI } from "../types";
 import { Surface, IconButton } from 'react-native-paper';
 import theme from "../theme";
+import { TouchableHighlight } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   smallPlayerContainer: {
@@ -43,15 +44,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const MiniPlayer = ({ uri, sliderProps, isPlaying, play, pause } : MiniPlayerUI) => {
+const MiniPlayer = ({ uri, sliderProps, isPlaying, play, pause, goToMainPlayer } : MiniPlayerUI) => {
   return (
     <View style={styles.smallPlayerContainer}>
-      <Surface style={styles.smallPlayerSurface}>
-        <Image
-          style={styles.smallPlayerCover}
-          source={{ uri }}
-        />
-      </Surface>
+      <TouchableHighlight onPress={goToMainPlayer}>
+        <Surface style={styles.smallPlayerSurface}>
+          <Image
+            style={styles.smallPlayerCover}
+            source={{ uri }}
+          />
+        </Surface>
+      </TouchableHighlight>
       <View style={styles.smallPlayerBox}>
         <Slider
           minimumValue={0}

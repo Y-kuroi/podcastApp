@@ -8,8 +8,8 @@ import Recent from "./Recent";
 import Favorites from "./Favorites";
 import Discover from "./Discover";
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import PodcastPlayer from './PodcastPlayer';
 import theme from '../theme';
+import PodcastPlayerMini from './PodcastPlayerMini';
 
 const Tab = createMaterialTopTabNavigator<TabParamList>();
 
@@ -38,9 +38,7 @@ const Home = ({ navigation } : StackNavgProps) => {
           <Tab.Screen name="Discover" component={Discover} />
         </Tab.Navigator>
       </View>
-      <TouchableHighlight onPress={() => navigation.navigate("player", { mini: false })}>
-          <PodcastPlayer />
-      </TouchableHighlight>
+      <PodcastPlayerMini goToMainPlayer={() => navigation.navigate("player", {mini: true})}/>
     </View>
   );
 };

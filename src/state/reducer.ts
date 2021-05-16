@@ -13,7 +13,7 @@ export type Action =
 {
   type: "SET_CURRENT_EPISODE";
   payload: FeedItem
-}
+};
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {

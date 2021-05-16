@@ -1,75 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Audio, AVPlaybackStatus } from "expo-av";
-import { FeedItem } from "react-native-rss-parser";
-import { SliderProps, Player } from "../types";
+import { Player } from "../types";
+import { useStateValue, setPlayer, setSliderProps, setPlaying } from "../state";
 
-const controller = new Audio.Sound();
+const currentSound = new Audio.Sound();
 
-const usePlayer = (track: FeedItem, setSliderProps: React.Dispatch<React.SetStateAction<SliderProps>>) => {
-  const [ player, setPlayer ] = useState<Player>();
+const usePlayer = (mini = false) : Player => {
+  const [{ currentItem }, ] = useStateValue();
   useEffect(() => {
-    setPlayer({ controller: { play: playTrack, pause: pauseTrack, seek }});
-  }, [track]);
-
-  const onStatusUpdate = (status: AVPlaybackStatus) => {
-    if (status.isLoaded && status.isPlaying)
-      setSliderProps({ currentValue: status.positionMillis, duration: status.durationMillis });
-  };
+    const autoPlay = async () => {
+      if (currentItem && !mini) {
+        try {
+          await currentSound.unloadAsync();
+          await currentSound.loadAsync({ uri: currentItem.enclosures[0].url });
+          await currentSound.playAsync();
+        }
+        catch (e) {
+          console.log(`Couldn't load new sound `, e);
+        }
+      }
+    };
+    void  autoPlay();
+  }, [currentItem]);
 
   const playTrack = async () => {
-    if (track && controller) {
-      try {
-        const status = await controller.getStatusAsync();
-        console.log(status.isLoaded);
-        try {
-          if (!status.isLoaded) {
-            await controller.loadAsync({ uri : track.enclosures[0].url });
-          } else {
-            console.log("unload reload");
-            await controller.unloadAsync();
-            await controller.loadAsync({ uri: track.enclosures[0].url });
-          }    
-        }
-        catch (error) {
-          console.log("Cannot load track", error);
-        }
-        finally {
-          await controller.playAsync();
-          controller.setOnPlaybackStatusUpdate(onStatusUpdate);
-        }
-      } catch (e) {
-        console.log("Cannot play track");
+    try {
+      const status = await currentSound?.getStatusAsync();
+      if (status && status.isLoaded && !status.isPlaying) {
+        await currentSound?.playAsync();
       }
+    } catch (e) {
+      console.log("Playing error", e);
     }
   };
 
   const pauseTrack = async () => {
-    if (controller) {
-      try {
-        const status = await controller.getStatusAsync();
-        if (status.isLoaded && status.isPlaying) {
-            await controller.pauseAsync();
-          }
-      } catch (e) {
-        console.log("Cannot play track");
-      }
+    try {
+      await currentSound?.pauseAsync();
+    } catch (e) {
+      console.log("Cannot play track");
+    }
+  };
+
+  const stopTrack = async () => {
+    try {
+      await currentSound?.unloadAsync();
+    } catch (e) {
+      console.log("unloading track", e);
     }
   };
 
   const seek = async (currentValue: number) => {
-    if (controller) {
-      try {
-        const status = await controller.getStatusAsync();
-        if (status.isLoaded && status.isPlaying) {
-          await controller.pauseAsync();
-        }
-        await controller.setPositionAsync(currentValue);
-      } catch (e) {
-        console.log(e);
-      }
+    try {
+      await pauseTrack();
+      await currentSound?.setPositionAsync(currentValue);
+      await playTrack();
+    } catch (e) {
+      console.log(e);
     }
   };
-  return { player };
+
+  return ({ controller: { play: playTrack, pause: pauseTrack, seek, stop: stopTrack }, sound: currentSound });
 };
 
 export default usePlayer;

@@ -11,6 +11,7 @@ export type State = {
 const initialState : State = {
   feeds: { },
   currentFeed: "",
+
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([

@@ -1,6 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MaterialTopTabNavigationProp } from '@react-navigation/material-top-tabs';
 import { CompositeNavigationProp, RouteProp, NavigatorScreenParams  } from '@react-navigation/native';
+import { Audio } from 'expo-av';
 
 type Maybe<T> = T | undefined;
 
@@ -9,7 +10,9 @@ export interface Player {
     play(): Promise<void>;
     pause(): Promise<void>;
     seek(currentValue: number): Promise<void>;
+    stop(): Promise<void>;
   }
+  sound: Audio.Sound;
 }
 
 export interface SliderProps {
@@ -17,18 +20,23 @@ export interface SliderProps {
   duration: number | undefined;
 }
 
-export interface PlayerUI {
+interface BasePlayerUI {
   uri: Maybe<string>;
-  title: string;
-  subtitle: string;
   sliderProps: SliderProps;
   isPlaying: boolean;
   play(): Promise<void>;
   pause(): Promise<void>;
+}
+
+export interface PlayerUI extends BasePlayerUI {
+  title: string;
+  subtitle: string;
   seek(value: number): Promise<void>;
 }
 
-export type MiniPlayerUI = Omit<PlayerUI, "seek" | "subtitle" | "title">;
+export interface MiniPlayerUI extends BasePlayerUI {
+  goToMainPlayer(): void;
+}
 
 export type StackParamList = {
   Home: undefined;

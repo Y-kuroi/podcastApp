@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FeedItem } from "react-native-rss-parser/index";
-import usePlayer from "../hooks/usePlayer";
-import { SliderProps, StackNavgProps } from "../types";
-import MiniPlayer from "./MiniPlayer";
 import MainPlayer from "./MainPlayer";
 import { useStateValue } from "../state";
+import usePlayer from "../hooks/usePlayer";
+import { SliderProps, StackNavgProps } from "../types";
+import { useDebouncedCallback } from 'use-debounce';
 
 const placeHolder : FeedItem = {
   id: "1",
@@ -36,69 +36,47 @@ const placeHolder : FeedItem = {
   }
 };
 
-const PodcastPlayer = ({ episodeMetaData = placeHolder, route } : { episodeMetaData? : FeedItem, route?: StackNavgProps["route"]}) => {
+const PodcastPlayer = ({ route } : { route?: StackNavgProps["route"] }) => {
   const [{ currentItem, feeds, currentFeed }, ] = useStateValue();
-  const [ sliderProps, setSliderProps ] = useState<SliderProps>({currentValue: 0 , duration: 1});
-  const [ isPlaying, setIsPlaying ] = useState<boolean>(false);
-  const { player } = usePlayer(currentItem ?? episodeMetaData, setSliderProps);
-  const mini = route?.params?.mini ?? true;
-  episodeMetaData = currentItem ?? placeHolder;
-  const playEpisode = async () => {
-    try {
-      await player?.controller.play();
-      setIsPlaying(true);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const pauseEpisode = async () => {
-    try {
-      await player?.controller.pause();
-      setIsPlaying(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const seek = async (value : number) => {
-    try {
-      await player?.controller.seek(value);
-      await player?.controller.play();
-      setSliderProps({...sliderProps, currentValue: value});
-      setIsPlaying(true);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  useEffect(() => {
-    const autoPlay = async () => {
-      if (currentItem) {
-        await player?.controller.play();
-        setIsPlaying(true);
+  const [ isPlaying, setIsPlaying ] = useState(false);
+  const [ sliderProps, setSliderProps ] = useState<SliderProps>({ currentValue: 0, duration: 0 });
+  const [ canRun, setCanRun ] = useState(true);
+  const player = usePlayer(route?.params?.mini);
+  const episodeMetaData = currentItem ?? placeHolder;
+  const debounce = useDebouncedCallback(async () => {
+    const getStatus = async () => {
+      try {
+        const status = await player.sound.getStatusAsync();
+        if (status.isLoaded) {
+          setIsPlaying(status.isPlaying);
+          setSliderProps({ currentValue: status.positionMillis, duration: status.durationMillis});
+        }
+      }
+      catch (e) {
+        console.log(e);
       }
     };
-    void  autoPlay();
-  }, [player]);
-  return (
-    ((mini &&
-      <MiniPlayer 
-        uri={episodeMetaData.itunes?.image ?? feeds[currentFeed]?.itunes.image}
-        sliderProps={sliderProps}
-        isPlaying={isPlaying}
-        play={playEpisode}
-        pause={pauseEpisode}
-      /> || null)
-    || (!mini &&
-      <MainPlayer 
-        uri={episodeMetaData.itunes?.image ?? feeds[currentFeed]?.itunes.image}
-        sliderProps={sliderProps}
-        isPlaying={isPlaying}
-        title={episodeMetaData.title}
-        subtitle={episodeMetaData.itunes.subtitle}
-        play={playEpisode}
-        pause={pauseEpisode}
-        seek={seek}
-      /> || null))
-    );
+    await getStatus();
+    setCanRun(true);
+    debounce.cancel();
+  }, 300);
+  useEffect(() => {
+    if (canRun) {
+      setCanRun(false);
+      void debounce();
+    }
+  }, [canRun]);
+  return(
+    <MainPlayer 
+      uri={episodeMetaData.itunes?.image ?? feeds[currentFeed]?.itunes.image}
+      sliderProps={sliderProps}
+      isPlaying={isPlaying}
+      title={episodeMetaData.title}
+      subtitle={episodeMetaData.itunes.subtitle}
+      play={async () => await player?.controller.play()}
+      pause={async () => await player?.controller.pause()}
+      seek={async (value: number) => await player?.controller.seek(value)}
+  />);
 };
 
 export default PodcastPlayer;
