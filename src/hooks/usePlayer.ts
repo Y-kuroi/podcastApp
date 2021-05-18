@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Audio, AVPlaybackStatus } from "expo-av";
+import { useEffect } from "react";
+import { Audio } from "expo-av";
 import { Player } from "../types";
-import { useStateValue, setPlayer, setSliderProps, setPlaying } from "../state";
+import { useStateValue } from "../state";
 
 const currentSound = new Audio.Sound();
 

@@ -4,20 +4,25 @@ import { Feed } from "react-native-rss-parser";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import theme from "../theme";
 import { setCurrentFeed, useStateValue } from "../state";
+import moment from "moment";
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    elevation: 3,
-    borderRadius: 6,
     flexWrap: "wrap",
     justifyContent: "space-around",
+  },
+  box: {
+    elevation: 4,
+    borderRadius: 6,
     height: 100,
     backgroundColor: theme.colors.primaryComp
   },
   cover: {
     width: 100,
     height: 100,
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
     flex: 0
   },
   infoContainer: {
@@ -39,21 +44,22 @@ const SingleItem = ({ item, navigate} : {item : Feed, navigate(): void }) => {
     dispatch(setCurrentFeed(item.title));
     navigate();
   };
+  const lastUpdated = moment(item.items[0]?.published ?? item.lastUpdated).fromNow();
   return(
-    <Surface style={styles.container}>
-      <Image
-        style={styles.cover}
-        source={{
-          uri: item.itunes.image
-        }}
-      />
-      <View style={styles.infoContainer}>
-        <Pressable android_ripple={{color: "gray", radius: -30}} onPress={handlePress}>
+    <Surface style={styles.box}>
+      <Pressable style={[styles.container, styles.box]} android_ripple={{color: theme.colors.primaryLighter, radius: -30}} onPress={handlePress}>
+        <Image
+          style={styles.cover}
+          source={{
+            uri: item.itunes.image
+          }}
+        />
+        <View style={styles.infoContainer}>
           <Title numberOfLines={1} style={styles.title}>{item.title}</Title>
           <Subheading numberOfLines={1}>{item.itunes.authors[0].name}</Subheading>
-          <Caption numberOfLines={1} style={styles.caption}>Last update: {item.lastUpdated}</Caption>
-        </Pressable>
-      </View>
+          <Caption numberOfLines={1} style={styles.caption}>Last update: {lastUpdated}</Caption>
+        </View>
+      </Pressable>
     </Surface>
   );
 };

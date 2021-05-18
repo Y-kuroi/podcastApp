@@ -7,7 +7,6 @@ import PodcastsList from './PodcastsList';
 import Recent from "./Recent";
 import Favorites from "./Favorites";
 import Discover from "./Discover";
-import { TouchableHighlight } from 'react-native-gesture-handler';
 import theme from '../theme';
 import PodcastPlayerMini from './PodcastPlayerMini';
 

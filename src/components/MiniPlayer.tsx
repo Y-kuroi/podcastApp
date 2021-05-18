@@ -1,10 +1,8 @@
 import React from "react";
-import { StyleSheet, View, Image } from 'react-native';
-import Slider from '@react-native-community/slider';
+import { StyleSheet, View, Image, Pressable } from 'react-native';
 import { MiniPlayerUI } from "../types";
-import { Surface, IconButton } from 'react-native-paper';
+import { Surface, IconButton, ProgressBar } from 'react-native-paper';
 import theme from "../theme";
-import { TouchableHighlight } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   smallPlayerContainer: {
@@ -42,27 +40,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  progressBar: {
+    margin: 5,
+    marginHorizontal: 8
+  },
 });
 
 const MiniPlayer = ({ uri, sliderProps, isPlaying, play, pause, goToMainPlayer } : MiniPlayerUI) => {
   return (
     <View style={styles.smallPlayerContainer}>
-      <TouchableHighlight onPress={goToMainPlayer}>
+      <Pressable onPress={goToMainPlayer}>
         <Surface style={styles.smallPlayerSurface}>
           <Image
             style={styles.smallPlayerCover}
             source={{ uri }}
           />
         </Surface>
-      </TouchableHighlight>
+      </Pressable>
       <View style={styles.smallPlayerBox}>
-        <Slider
-          minimumValue={0}
-          maximumValue={sliderProps.duration ? sliderProps.duration : 1}
-          minimumTrackTintColor="#003350"
-          maximumTrackTintColor="#000000"
-          value={sliderProps.currentValue}
-          disabled
+        <ProgressBar
+          style={styles.progressBar}
+          progress={sliderProps.currentValue / (sliderProps.duration ?? 1)}
+          color={theme.colors.primaryDarker}
         />
         <View style={styles.smallPlayerControls}>
           <IconButton

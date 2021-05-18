@@ -3,6 +3,7 @@ import { useStateValue } from "../state";
 import { FeedItem } from "react-native-rss-parser/index";
 import MiniPlayer from "./MiniPlayer";
 import usePlayer from "../hooks/usePlayer";
+import useStatus from "../hooks/useStatus";
 
 const placeHolder : FeedItem = {
   id: "1",
@@ -38,11 +39,11 @@ const PodcastPlayerMini = ({ goToMainPlayer } : { goToMainPlayer() : void }) => 
   const [{ currentItem, feeds, currentFeed }, ] = useStateValue();
   const player = usePlayer(true);
   const episodeMetaData = currentItem ?? placeHolder;
-  const isPlaying = true;
+  const { isPlaying, sliderProps } = useStatus(player);
   return (
     <MiniPlayer 
       uri={episodeMetaData.itunes?.image ?? feeds[currentFeed]?.itunes.image}
-      sliderProps={{ currentValue: 0, duration: 0 }}
+      sliderProps={sliderProps}
       isPlaying={isPlaying}
       play={async () => await player?.controller.play()}
       pause={async () => await player?.controller.pause()}

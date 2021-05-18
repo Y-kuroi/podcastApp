@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FeedItem } from "react-native-rss-parser/index";
 import MainPlayer from "./MainPlayer";
 import { useStateValue } from "../state";
 import usePlayer from "../hooks/usePlayer";
-import { SliderProps, StackNavgProps } from "../types";
-import { useDebouncedCallback } from 'use-debounce';
+import useStatus from "../hooks/useStatus";
+import { StackNavgProps } from "../types";
 
 const placeHolder : FeedItem = {
   id: "1",
@@ -38,34 +38,9 @@ const placeHolder : FeedItem = {
 
 const PodcastPlayer = ({ route } : { route?: StackNavgProps["route"] }) => {
   const [{ currentItem, feeds, currentFeed }, ] = useStateValue();
-  const [ isPlaying, setIsPlaying ] = useState(false);
-  const [ sliderProps, setSliderProps ] = useState<SliderProps>({ currentValue: 0, duration: 0 });
-  const [ canRun, setCanRun ] = useState(true);
   const player = usePlayer(route?.params?.mini);
   const episodeMetaData = currentItem ?? placeHolder;
-  const debounce = useDebouncedCallback(async () => {
-    const getStatus = async () => {
-      try {
-        const status = await player.sound.getStatusAsync();
-        if (status.isLoaded) {
-          setIsPlaying(status.isPlaying);
-          setSliderProps({ currentValue: status.positionMillis, duration: status.durationMillis});
-        }
-      }
-      catch (e) {
-        console.log(e);
-      }
-    };
-    await getStatus();
-    setCanRun(true);
-    debounce.cancel();
-  }, 300);
-  useEffect(() => {
-    if (canRun) {
-      setCanRun(false);
-      void debounce();
-    }
-  }, [canRun]);
+  const { isPlaying, sliderProps } = useStatus(player);
   return(
     <MainPlayer 
       uri={episodeMetaData.itunes?.image ?? feeds[currentFeed]?.itunes.image}
