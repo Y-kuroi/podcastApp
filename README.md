@@ -5,7 +5,7 @@ This project is part of my ReactNative and TypeScript study. I chose a podcast l
 + This app is intended as a mere **demo** , some features that are deemed essential might not be working. 
 
  ## Release:
- <a href="https://drive.google.com/file/d/1-oY_VuZByIhoL90oOtYdBUrpqiIzPZru/view?usp=sharing">Download APK</a>
+ <a href="https://github.com/Y-kuroi/podcastApp/releases/download/0.1/podcastApp-4cc36b94b9314fdd872c72b7ba612be9-signed.apk">Download APK</a>
  - What is not working:
     + Search
     + Menu (sort, refresh...)
