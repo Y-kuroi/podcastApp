@@ -13,11 +13,11 @@ This project is part of my ReactNative and TypeScript study. I chose a podcast l
     + Some minor UI features.
     + Discover. (Server or API is needed for this)
 
- <img align="left" src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_172735_live.podcast.jpg?token=ATQGNC5DDPRRVTSL7MR2E2DAWEFRU" width="270" height="480">
- <img align="left" src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_172802_live.podcast.jpg?token=ATQGNC3W5NVYI6DDOBD7ZRDAWEGFO" width="270" height="480">
- <img align="left" src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_172820_live.podcast.jpg?token=ATQGNCYJYDIRGWFBWEY7Z63AWEGFQ" width="270" height="480">
+ <img align="left" src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_172735_live.podcast.jpg" width="270" height="480">
+ <img align="left" src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_172802_live.podcast.jpg" width="270" height="480">
+ <img align="left" src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_172820_live.podcast.jpg" width="270" height="480">
  
  
- <img align="left" src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_172852_live.podcast.jpg?token=ATQGNC6AA7B5OQKGH5DW5A3AWEGFU" width="270" height="480">
- <img src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_173141_live.podcast.jpg?token=ATQGNC6GNYO2DLT6J3K7GC3AWEGFY" width="270" height="480">
+ <img align="left" src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_172852_live.podcast.jpg" width="270" height="480">
+ <img src="https://raw.githubusercontent.com/Y-kuroi/podcastApp/main/snapshots/Screenshot_20210528_173141_live.podcast.jpg" width="270" height="480">
 
