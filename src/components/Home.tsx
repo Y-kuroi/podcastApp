@@ -5,7 +5,7 @@ import { TabParamList, StackNavgProps } from "../types";
 import TabBar from "./TabBar";
 import PodcastsList from './PodcastsList';
 import Recent from "./Recent";
-import Favorites from "./Favorites";
+// import Favorites from "./Favorites";
 import Discover from "./Discover";
 import theme from '../theme';
 import PodcastPlayerMini from './PodcastPlayerMini';
@@ -31,10 +31,10 @@ const Home = ({ navigation } : StackNavgProps) => {
     <View style={styles.container}>
       <View style={{flex: 1}}>
         <Tab.Navigator tabBar={props => <TabBar {...props} />}>
-          <Tab.Screen name="Podcasts" component={PodcastsList} />
-          <Tab.Screen name="Recent" component={Recent} />
-          <Tab.Screen name="Favorites" component={Favorites} />
-          <Tab.Screen name="Discover" component={Discover} />
+          <Tab.Screen name="Podcasts" component={PodcastsList}/>
+          <Tab.Screen name="Recent" component={PodcastsList} />
+          <Tab.Screen name="Favorites" component={PodcastsList} />
+          <Tab.Screen name="Discover" component={PodcastsList} />
         </Tab.Navigator>
       </View>
       <PodcastPlayerMini goToMainPlayer={() => navigation.navigate("player", {mini: true})}/>

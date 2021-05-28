@@ -40,6 +40,13 @@ export const setCurrentEpisode = (payload: FeedItem) : Action => {
   };
 };
 
+export const setFavoriteFeed = (payload: Feed) : Action => {
+  return {
+    type: "SET_AS_FAVORITE",
+    payload
+  };
+};
+
 type StateProviderProps = {
   reducer: React.Reducer<State, Action>;
   children: React.ReactElement;

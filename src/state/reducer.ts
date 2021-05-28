@@ -8,14 +8,19 @@ export type Action =
 } |
 {
   type: "SET_CURRENT_FEED";
-  payload: string
+  payload: string;
 } |
 {
   type: "SET_CURRENT_EPISODE";
-  payload: FeedItem
+  payload: FeedItem;
+} |
+{
+  type: "SET_AS_FAVORITE";
+  payload: Feed;
 };
 
 export const reducer = (state: State, action: Action): State => {
+  const s = "sh";
   switch (action.type) {
     case "SET_RSS_FEEDS":
       return { ...state, feeds: action.payload };
@@ -23,6 +28,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, currentFeed: action.payload };
     case "SET_CURRENT_EPISODE":
       return { ...state, currentItem: action.payload };
+    case "SET_AS_FAVORITE":
+      return { ...state, feeds: { ...state.feeds, [action.payload.title] : action.payload }};
     default : return state;
   }
 };

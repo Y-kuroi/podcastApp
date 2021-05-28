@@ -1,9 +1,9 @@
 import React from "react";
-import { Subheading, Surface, Title, Caption } from "react-native-paper";
+import { Subheading, Surface, Title, Caption, IconButton } from "react-native-paper";
 import { Feed } from "react-native-rss-parser";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import theme from "../theme";
-import { setCurrentFeed, useStateValue } from "../state";
+import { setCurrentFeed, useStateValue, setFavoriteFeed } from "../state";
 import moment from "moment";
 
 const styles = StyleSheet.create({
@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-around",
+    alignItems: "center"
   },
   box: {
     elevation: 4,
@@ -44,6 +45,9 @@ const SingleItem = ({ item, navigate} : {item : Feed, navigate(): void }) => {
     dispatch(setCurrentFeed(item.title));
     navigate();
   };
+  const toggleFavorite = () => {
+    dispatch(setFavoriteFeed({ ...item, favorite: !item.favorite }));
+  };
   const lastUpdated = moment(item.items[0]?.published ?? item.lastUpdated).fromNow();
   return(
     <Surface style={styles.box}>
@@ -57,7 +61,12 @@ const SingleItem = ({ item, navigate} : {item : Feed, navigate(): void }) => {
         <View style={styles.infoContainer}>
           <Title numberOfLines={1} style={styles.title}>{item.title}</Title>
           <Subheading numberOfLines={1}>{item.itunes.authors[0].name}</Subheading>
-          <Caption numberOfLines={1} style={styles.caption}>Last update: {lastUpdated}</Caption>
+          <View style={styles.container}>
+            <Caption numberOfLines={1} style={styles.caption}>Last update: {lastUpdated}</Caption>
+            {!item.favorite ? 
+              <IconButton icon="heart-outline" onPress={toggleFavorite}/> :
+              <IconButton icon="heart" onPress={toggleFavorite}/>}
+          </View>
         </View>
       </Pressable>
     </Surface>

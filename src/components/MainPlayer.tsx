@@ -57,14 +57,14 @@ const MainPlayer = ({ uri, title, subtitle, sliderProps, isPlaying, play, pause,
         <Surface style={styles.surface}>
           <Image style={styles.cover} source={{ uri }} />
         </Surface>
-        <Title numberOfLines={1 }>{title}</Title>
+        <Title numberOfLines={1}>{title}</Title>
         <Subheading numberOfLines={3} >{subtitle}</Subheading>
       </View>
       <View style={styles.lowerPart}>
         <Slider
           style={styles.slider}
           minimumValue={0}
-          maximumValue={sliderProps.duration ? sliderProps.duration : 1}
+          maximumValue={sliderProps.duration ?? 1}
           minimumTrackTintColor="#003350"
           maximumTrackTintColor="#000000"
           thumbTintColor={theme.colors.secondary}

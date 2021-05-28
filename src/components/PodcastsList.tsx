@@ -20,13 +20,14 @@ const Separator = () => {
   );
 };
 
-const PodcastsList = ({ navigation } : TabNavgProps) => {
+const PodcastsList = ({ navigation, route } : TabNavgProps) => {
   const [ { feeds } ,  ] = useStateValue();
+  const favorite = route.name === "Favorites";
   return (
     <View style={styles.container}>
       <FlatList
         renderItem={({ item }) => <SingleItem item={item} navigate={(): void => navigation.push("EpsList")} />}
-        data={Object.values(feeds)}
+        data={Object.values(feeds).filter(feed => favorite ? feed.favorite === favorite : true)}
         keyExtractor={({ title }) => title}
         ItemSeparatorComponent={Separator}
         showsVerticalScrollIndicator={false}
