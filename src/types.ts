@@ -2,6 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MaterialTopTabNavigationProp } from '@react-navigation/material-top-tabs';
 import { CompositeNavigationProp, RouteProp, NavigatorScreenParams  } from '@react-navigation/native';
 import { Audio } from 'expo-av';
+import moment from 'moment';
 
 type Maybe<T> = T | undefined;
 
@@ -18,6 +19,8 @@ export interface Player {
 export interface SliderProps {
   currentValue: number;
   duration: number | undefined;
+  currentValueConverted: moment.Duration;
+  durationConverted: moment.Duration;
 }
 
 interface BasePlayerUI {

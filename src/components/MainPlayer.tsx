@@ -2,9 +2,10 @@ import React from "react";
 import { StyleSheet, View, Image } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { PlayerUI } from "../types";
-import { Surface, Title, Subheading, IconButton } from 'react-native-paper';
+import { Surface, Title, Subheading, IconButton, Caption } from 'react-native-paper';
 import theme from "../theme";
 import Constants from 'expo-constants';
+import moment from "moment";
 
 const styles = StyleSheet.create({
   container: {
@@ -42,11 +43,21 @@ const styles = StyleSheet.create({
   },
   slider: {
     height: 40,
-    width: "100%"
+    width: "100%",
   },
   playButton: {
     borderColor: theme.colors.secondary,
     borderWidth: 1
+  },
+  timerContainer: {
+    position: "absolute",
+    flexDirection: "row",
+    width: "100%",
+    left: 20,
+    top: 10,
+    justifyContent: "space-between",
+    height: 20,
+  
   }
 });
 
@@ -61,6 +72,30 @@ const MainPlayer = ({ uri, title, subtitle, sliderProps, isPlaying, play, pause,
         <Subheading numberOfLines={3} >{subtitle}</Subheading>
       </View>
       <View style={styles.lowerPart}>
+        <View style={styles.timerContainer}>
+          {sliderProps.currentValueConverted &&
+          <Caption>
+            {sliderProps.currentValueConverted.hours() ?
+            `${sliderProps.currentValueConverted.hours()}:` : ""}
+            {sliderProps.currentValueConverted.minutes() > 9
+            ? sliderProps.currentValueConverted.minutes() :
+            `0${sliderProps.currentValueConverted.minutes()}`}
+            :{sliderProps.currentValueConverted.seconds() > 9
+            ? sliderProps.currentValueConverted.seconds() :
+            `0${sliderProps.currentValueConverted.seconds()}`}
+          </Caption>|| <Caption>00:00</Caption>}
+          {sliderProps.durationConverted &&
+          <Caption>
+            {sliderProps.durationConverted.hours() ?
+            `${sliderProps.durationConverted.hours()}:` : ""}
+            {sliderProps.durationConverted.minutes() > 9
+            ? sliderProps.durationConverted.minutes() :
+            `0${sliderProps.durationConverted.minutes()}`}
+            :{sliderProps.durationConverted.seconds() > 9
+            ? sliderProps.durationConverted.seconds() :
+            `0${sliderProps.durationConverted.seconds()}`}
+          </Caption> || <Caption>00:00</Caption>}
+        </View>
         <Slider
           style={styles.slider}
           minimumValue={0}

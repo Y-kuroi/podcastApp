@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useState, useEffect } from "react";
 import { useDebouncedCallback } from 'use-debounce';
 import { Player, SliderProps } from "../types";
@@ -12,7 +13,13 @@ const useStatus = (player : Player) => {
         const status = await player.sound.getStatusAsync();
         if (status.isLoaded) {
           setIsPlaying(status.isPlaying);
-          setSliderProps({ currentValue: status.positionMillis, duration: status.durationMillis});
+          setSliderProps(
+            { currentValue: status.positionMillis,
+              duration: status.durationMillis,
+              currentValueConverted: moment.duration(status.positionMillis),
+              durationConverted: moment.duration(status.durationMillis)
+            }
+          );
         }
       }
       catch (e) {
